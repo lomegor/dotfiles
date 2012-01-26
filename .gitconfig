@@ -1,0 +1,22 @@
+[user]
+	name = Sebastián Ventura
+	email = lomegor@gmail.com
+[core]
+	editor = vim
+[color]
+	ui = auto
+[alias]
+  st = status
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  lg = log -p
+	rb = rebase
+	spush = svn dcommit
+	lsd = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	wip  = "git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
+	unwip = git log -n 1 | grep -q -c wip && git reset HEAD~1
+	panic = !tar cvf ../git_panic.tar .
+	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
+	fix = commit --amend -C HEAD

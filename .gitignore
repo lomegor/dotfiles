@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+#Except dotfiles
+!/.gitignore
+!/.bashrc
+!/.inputrc
+!/.gitconfig
+!/.vimrc
+!/.zshrc
+!/.inputrc
