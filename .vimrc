@@ -81,6 +81,16 @@ cmap w!! w !sudo tee % >/dev/null
 " Enter to create new line
 map <S-Enter> O<Esc>
 map <CR> o<Esc>
+" tab navigation
+nmap <C-h> :tabprevious<CR>
+nmap <C-l> :tabnext<CR>
+map <C-h> :tabprevious<CR>
+map <C-l> :tabnext<CR>
+imap <C-h> <Esc>:tabprevious<CR>i
+imap <C-l> <Esc>:tabnext<CR>i
+" WARNING, remapping C-w
+nmap <C-w> :tabclose<CR>
+imap <C-w> <Esc>:tabclose<CR>
 
 " Restore cursor position upon reopening files {{{
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
