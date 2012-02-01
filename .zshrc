@@ -80,9 +80,13 @@ precmd () {
 
 	#battery
 	#maybe change directories if needed
-	local rem=$(grep "^remaining capacity" /proc/acpi/battery/BAT1/state | awk '{ print $3 }')
-	local full=$(grep "^last full capacity" /proc/acpi/battery/BAT1/info | awk '{ print $4 }')
-	local state=$(grep "^charging state" /proc/acpi/battery/BAT1/state | awk '{ print $3 }')
+	#local rem=$(grep "^remaining capacity" /proc/acpi/battery/BAT1/state | awk '{ print $3 }')
+	#local full=$(grep "^last full capacity" /proc/acpi/battery/BAT1/info | awk '{ print $4 }')
+	#local state=$(grep "^charging state" /proc/acpi/battery/BAT1/state | awk '{ print $3 }')
+	local rem=$(cat /sys/class/power_supply/BAT1/charge_now)
+	local full=$(cat /sys/class/power_supply/BAT1/charge_full)
+	local state=$(cat /sys/class/power_supply/BAT1/status)
+
 
 	#calculate percentage and color of battery
 	local percentage
@@ -98,7 +102,7 @@ precmd () {
 
 	#add symbol if chargin
 	local charging=""
-	if [[ $state != "discharging" ]]; then
+	if [[ $state != "Discharging" ]]; then
 		charging="↯"
 		((percsize=percsize+1))
 	fi
