@@ -45,7 +45,6 @@ set showcmd                     " show (partial) command in the last line of the
 set nomodeline                  " disable mode lines (security measure)
 set ttyfast                     " always use a fast terminal
 set formatoptions-=o            " don't start new lines w/ comment leader on pressing 'o'
-let loaded_matchparen = 1       " set because of slow editing
 set autoread                    " auto reload files
 
 " normal regexes
@@ -88,9 +87,6 @@ map <C-h> :tabprevious<CR>
 map <C-l> :tabnext<CR>
 imap <C-h> <Esc>:tabprevious<CR>i
 imap <C-l> <Esc>:tabnext<CR>i
-" WARNING, remapping C-w
-nmap <C-w> :tabclose<CR>
-imap <C-w> <Esc>:tabclose<CR>
 
 " Restore cursor position upon reopening files {{{
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
