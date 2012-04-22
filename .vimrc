@@ -110,3 +110,7 @@ colorscheme desert
 if &t_Co > 2 || has("gui_running")
    syntax on                    " switch syntax highlighting on, when the terminal has colors
 endif
+
+"set options for projects
+"monetate
+autocmd BufNewFile,BufRead ~/dev/prog/monetate/* set tabstop=4 shiftwidth=4 expandtab
