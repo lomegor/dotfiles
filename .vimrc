@@ -100,6 +100,7 @@ au BufRead,BufNewFile *.txt set linebreak
 " Perl, Python and shell scripts
 au BufNewFile,BufRead *.py,*.pl,*.sh vmap u :-1/^#/s///<CR>
 au BufNewFile,BufRead *.py,*.pl,*.sh vmap c :-1/^/s//#/<CR>
+au BufNewFile,BufRead *.py set tabstop=4 shiftwidth=4 expandtab
 " C, C++
 au BufNewFile,BufRead *.h,*.c,*.cpp vmap u :-1/^\/\//s///<CR>
 au BufNewFile,BufRead *.h,*.c,*.cpp vmap s :-1/^/s//\/\//<CR>
