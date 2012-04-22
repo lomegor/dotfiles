@@ -106,6 +106,8 @@ au BufNewFile,BufRead *.h,*.c,*.cpp vmap u :-1/^\/\//s///<CR>
 au BufNewFile,BufRead *.h,*.c,*.cpp vmap s :-1/^/s//\/\//<CR>
 " Text width 72 on git commit messages
 au filetype gitcommit setlocal textwidth=72
+" For almost all code
+au BufNewFile,BufRead *.h,*.c,*.cpp,*.py,*.js,*.java,*.pl,*.sh set textwidth=79
 
 colorscheme desert
 if &t_Co > 2 || has("gui_running")
