@@ -28,6 +28,9 @@ colors
 #just a fun way to cd
 setopt AUTOCD
 
+#autopushd
+setopt autopushd
+
 #vim in the command line sucks
 bindkey -e
 
