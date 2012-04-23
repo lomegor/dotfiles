@@ -91,12 +91,9 @@ imap <C-l> <Esc>:tabnext<CR>i
 " Restore cursor position upon reopening files {{{
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 " tex files
-au BufRead,BufNewFile *.tex set wrap
-au BufRead,BufNewFile *.tex set textwidth=80
-au BufRead,BufNewFile *.tex set linebreak
+au BufRead,BufNewFile *.tex set wrap textwidth=80 linebreak
 " txt files
-au BufRead,BufNewFile *.txt set wrap
-au BufRead,BufNewFile *.txt set linebreak
+au BufRead,BufNewFile *.txt set wrap linebreak
 " Perl, Python and shell scripts
 au BufNewFile,BufRead *.py,*.pl,*.sh vmap u :-1/^#/s///<CR>
 au BufNewFile,BufRead *.py,*.pl,*.sh vmap c :-1/^/s//#/<CR>
@@ -105,7 +102,7 @@ au BufNewFile,BufRead *.py set tabstop=4 shiftwidth=4 expandtab
 au BufNewFile,BufRead *.h,*.c,*.cpp vmap u :-1/^\/\//s///<CR>
 au BufNewFile,BufRead *.h,*.c,*.cpp vmap s :-1/^/s//\/\//<CR>
 " Text width 72 on git commit messages
-au filetype gitcommit setlocal textwidth=72
+au filetype gitcommit setlocal textwidth=72 wrapmargin=72 wrap
 " For almost all code
 au BufNewFile,BufRead *.h,*.c,*.cpp,*.py,*.js,*.java,*.pl,*.sh set textwidth=79
 
