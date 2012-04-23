@@ -131,3 +131,7 @@ alias update='sudo yum update -y'
 alias top='htop'
 alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 grr() { grep -r $1 * }
+
+#monetate
+export DEVBOX=dev-sventura-1.monetate.net
+source ~/dev/prog/monetate/monetate-frontend/frontend/tools/zsh/deployment.zsh
