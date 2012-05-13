@@ -62,3 +62,6 @@ esac
 PROMPT_COMMAND=prompt_command
 
 
+#monetate
+export DEVBOX=dev-sventura-1.monetate.org
+source ~/dev/prog/monetate/monetate-frontend/frontend/tools/bash/deployment.bash

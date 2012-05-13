@@ -31,6 +31,9 @@ setopt AUTOCD
 #autopushd
 setopt autopushd
 
+#autocorrect
+setopt CORRECT
+
 #vim in the command line sucks
 bindkey -e
 
@@ -133,5 +136,5 @@ alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 grr() { grep -r $1 * }
 
 #monetate
-export DEVBOX=dev-sventura-1.monetate.net
+export DEVBOX=dev-sventura-1.monetate.org
 source ~/dev/prog/monetate/monetate-frontend/frontend/tools/zsh/deployment.zsh
