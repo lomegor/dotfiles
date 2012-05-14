@@ -133,6 +133,7 @@ alias install='sudo yum install'
 alias update='sudo yum update -y'
 alias top='htop'
 alias httpdlog='sudo tail -f /var/log/httpd/error_log'
+alias cleand='rm ~/tmp/downloads/*'
 grr() { grep -r $1 * }
 
 #monetate
