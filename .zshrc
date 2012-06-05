@@ -115,12 +115,28 @@ precmd () {
 	#second space round for getting everything to the end of the line
 	local PR_FILL2="\${(l.(( ($COLUMNS - 1)/2 - $percsize - $timsize/2)).. .)}"
 	PR_BATTERY="${charging}${PR_BATTERY}"
+	#ser virtualenv
+	local PR_VIRTUAL="`basename \"$VIRTUAL_ENV\"`"
 
 	#setting prompt here because PR_FILL does not get passed
 	PROMPT="╭─ %{%F{blue}%}${current_dir}%{%f%}${(e)PR_FILL1}${time_str}${(e)PR_FILL2}${PR_BATTERY_COLOR}${PR_BATTERY}%{%f%}
-╰─ %B%#%b%{%f%} "
+╰─${PR_VIRTUAL} %B%#%b%{%f%} "
 	RPROMPT="${return_code} ${git_branch}"
 }
+
+#automaticly activate virtualenv on cd
+#based on list of directories
+workon_virtualenv() {
+	if [[ "${PWD}" = "/home/lomegor/dev/prog/shoal/server" ]] {
+		source bin/activate
+	}
+}
+
+vcd() {
+  cd "$@" && workon_virtualenv
+}
+
+alias cd="vcd"
 
 #env
 export EDITOR=vi
