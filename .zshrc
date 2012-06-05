@@ -84,37 +84,36 @@ precmd () {
 	#first round of spaces to center date
 	local PR_FILL1="\${(l.(($COLUMNS/2 - 3 - $dirsize - $timsize/2)).. .)}"
 
+	local PR_BATTERY=""
 	#battery
-	#maybe change directories if needed
-	#local rem=$(grep "^remaining capacity" /proc/acpi/battery/BAT1/state | awk '{ print $3 }')
-	#local full=$(grep "^last full capacity" /proc/acpi/battery/BAT1/info | awk '{ print $4 }')
-	#local state=$(grep "^charging state" /proc/acpi/battery/BAT1/state | awk '{ print $3 }')
-	local rem=$(cat /sys/class/power_supply/BAT1/charge_now)
-	local full=$(cat /sys/class/power_supply/BAT1/charge_full)
-	local state=$(cat /sys/class/power_supply/BAT1/status)
+	if [[ -d /sys/class/power_supply/BAT1 ]] {
+		local rem=$(cat /sys/class/power_supply/BAT1/charge_now)
+		local full=$(cat /sys/class/power_supply/BAT1/charge_full)
+		local state=$(cat /sys/class/power_supply/BAT1/status)
 
+		#calculate percentage and color of battery
+		local percentage
+			(( percentage = ($rem*10/$full)))
+		PR_BATTERY="${(l.$percentage)..█.)}"
+		local PR_BATTERY_COLOR="$fg_bold[grey]"
+		if [[ percentage -lt 2 ]]; then
+			PR_BATTERY_COLOR="%F{red}"
+		elif [[ percentage -lt 4 ]]; then 
+			PR_BATTERY_COLOR="%F{yellow}"
+		fi
+		local percsize=$percentage
 
-	#calculate percentage and color of battery
-	local percentage
-		(( percentage = ($rem*10/$full)))
-	local PR_BATTERY="${(l.$percentage)..█.)}"
-	local PR_BATTERY_COLOR="$fg_bold[grey]"
-	if [[ percentage -lt 2 ]]; then
-		PR_BATTERY_COLOR="%F{red}"
-	elif [[ percentage -lt 4 ]]; then 
-		PR_BATTERY_COLOR="%F{yellow}"
-	fi
-	local percsize=$percentage
+		#add symbol if chargin
+		local charging=""
+		if [[ $state != "Discharging" ]]; then
+			charging="↯"
+			((percsize=percsize+1))
+		fi
+		#second space round for getting everything to the end of the line
+		local PR_FILL2="\${(l.(( ($COLUMNS - 1)/2 - $percsize - $timsize/2)).. .)}"
+		PR_BATTERY="${charging}${PR_BATTERY}"
+	}
 
-	#add symbol if chargin
-	local charging=""
-	if [[ $state != "Discharging" ]]; then
-		charging="↯"
-		((percsize=percsize+1))
-	fi
-	#second space round for getting everything to the end of the line
-	local PR_FILL2="\${(l.(( ($COLUMNS - 1)/2 - $percsize - $timsize/2)).. .)}"
-	PR_BATTERY="${charging}${PR_BATTERY}"
 	#ser virtualenv
 	local PR_VIRTUAL="`basename \"$VIRTUAL_ENV\"`"
 
