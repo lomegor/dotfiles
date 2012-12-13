@@ -126,7 +126,7 @@ precmd () {
 #automaticly activate virtualenv on cd
 #based on list of directories
 workon_virtualenv() {
-	if [[ "${PWD}" = "/home/lomegor/dev/prog/shoal/server" ]] {
+	if [[ ( "${PWD}" = "/home/lomegor/dev/prog/shoal/server" ) || ( "${PWD}" = "/home/lomegor/dev/prog/taskit" ) ]] {
 		source bin/activate
 	}
 }
@@ -142,14 +142,14 @@ export EDITOR=vi
 export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/depot_tools
 export SVN_EDITOR=vi
 
-alias vim='gvim -v'
+alias vim='gvim -v -p'
 alias open='xdg-open'
 alias install='sudo yum install'
 alias update='sudo yum update -y'
 alias top='htop'
 alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 alias cleand='rm -r ~/tmp/downloads/*'
-grr() { grep -r $1 * }
+grr() { grep -ri $1 . }
 
 #monetate
 export DEVBOX=dev-sventura-1.monetate.org

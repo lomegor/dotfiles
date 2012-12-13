@@ -20,5 +20,6 @@
 	panic = !tar cvf ../git_panic.tar .
 	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 	fix = commit --amend -C HEAD
+	dbranch = push --delete origin
 [push]
 	default = upstream
