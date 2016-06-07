@@ -10,7 +10,7 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # User specific aliases and functions
-export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/depot_tools
+export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/go_appengine/:~/imp/prog/depot_tools:~/dev/monetate/monetate-frontend/frontend/bin:~/.rbenv/bin
 
 alias vim='gvim -v'
 alias open='xdg-open'
@@ -61,7 +61,6 @@ esac
 }
 PROMPT_COMMAND=prompt_command
 
-
-#monetate
-export DEVBOX=dev-sventura-1.monetate.org
-source ~/dev/prog/monetate/monetate-frontend/frontend/tools/bash/deployment.bash
+if [ -f ~/.mt ]; then
+	. ~/.mt
+fi

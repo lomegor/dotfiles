@@ -21,5 +21,9 @@
 	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 	fix = commit --amend -C HEAD
 	dbranch = push --delete origin
+	prb = pull --rebase
+	radd = !"f() { git remote add ${1} git@github.com:${1}/monetate-frontend.git; }; f"
+	prpo = !"git pull --rebase monetate master && git push origin master"
+	brm = !"git branch --merged | grep -v "\\*" | xargs -n 1 git branch -d"
 [push]
 	default = upstream

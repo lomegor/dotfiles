@@ -123,24 +123,10 @@ precmd () {
 	RPROMPT="${return_code} ${git_branch}"
 }
 
-#automaticly activate virtualenv on cd
-#based on list of directories
-workon_virtualenv() {
-	if [[ ( "${PWD}" = "/home/lomegor/dev/prog/shoal/server" ) || ( "${PWD}" = "/home/lomegor/dev/prog/taskit" ) ]] {
-		source bin/activate
-	}
-}
-
-vcd() {
-  cd "$@" && workon_virtualenv
-}
-
-alias cd="vcd"
-
 #env
-export EDITOR=vi
-export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/depot_tools
-export SVN_EDITOR=vi
+export EDITOR=vim
+export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/go_appengine/:~/imp/prog/depot_tools:~/dev/monetate/monetate-frontend/frontend/bin:~/.rbenv/bin
+export SVN_EDITOR=vim
 
 alias vim='gvim -v -p'
 alias open='xdg-open'
@@ -149,8 +135,9 @@ alias update='sudo yum update -y'
 alias top='htop'
 alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 alias cleand='rm -r ~/tmp/downloads/*'
+alias untar='tar -xvzf'
 grr() { grep -ri $1 . }
 
-#monetate
-export DEVBOX=dev-sventura-1.monetate.org
-source ~/dev/prog/monetate/monetate-frontend/frontend/tools/zsh/deployment.zsh
+if [ -f ~/.mt ]; then
+	. ~/.mt
+fi

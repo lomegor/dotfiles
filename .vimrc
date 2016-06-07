@@ -46,6 +46,7 @@ set nomodeline                  " disable mode lines (security measure)
 set ttyfast                     " always use a fast terminal
 set formatoptions-=o            " don't start new lines w/ comment leader on pressing 'o'
 set autoread                    " auto reload files
+set noeol												" no newline at end of file
 
 " Add folding
 set foldmethod=syntax
@@ -66,7 +67,9 @@ vnoremap / /\v
 " make p in Visual mode replace the selected text with the yank register
 vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
 " Shortcut to make
-nmap mk :w <Bar> make<CR>
+map ,m :w<CR>:make<CR><CR>
+" Tabe equals tabe
+cab Tabe tabe
 " Remap j and k to act as expected when used on long, wrapped, lines
 nnoremap j gj
 nnoremap <up> g<up>
@@ -82,10 +85,10 @@ vmap <silent> <leader>d "_d
 " Quick yanking to the end of the line
 nmap Y y$
 " Yank/paste to the OS clipboard with ,y and ,p
-nmap <leader>y "+y
-nmap <leader>Y "+yy
-nmap <leader>p "+p
-nmap <leader>P "+P
+map <leader>y "+y
+map <leader>Y "+yy
+map <leader>p "+p
+map <leader>P "+P
 " Clears highlight
 nmap <silent> <leader>/ :nohlsearch<CR>
 " Sudo to write
@@ -114,10 +117,12 @@ au BufEnter *.py setlocal tabstop=4 shiftwidth=4 expandtab
 " C, C++
 au BufEnter *.h,*.c,*.cpp vmap u :-1/^\/\//s///<CR>
 au BufEnter *.h,*.c,*.cpp vmap s :-1/^/s//\/\//<CR>
-" Text width 72 on git commit messages
-au filetype gitcommit setlocal textwidth=72 wrapmargin=72 wrap
 " For almost all code
 au BufEnter *.h,*.c,*.cpp,*.py,*.js,*.java,*.pl,*.sh setlocal textwidth=79
+" JSON files as js
+au BufEnter *.json set syntax=javascript textwidth=0 wrapmargin=0
+" GO files as go
+au BufEnter *.go set syntax=go textwidth=0 wrapmargin=0
 
 colorscheme desert
 if &t_Co > 2 || has("gui_running")
@@ -125,6 +130,4 @@ if &t_Co > 2 || has("gui_running")
 endif
 
 "set options for projects
-"monetate
-autocmd BufEnter ~/dev/prog/monetate/* setlocal textwidth=79 wrap 
-autocmd BufEnter ~/dev/prog/monetate/* setlocal tabstop=4 shiftwidth=4 expandtab
+source ~/.mtvim
