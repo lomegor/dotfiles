@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/lomegor/dev/monetate/monetate-frontend/src/custom/belk'
+let g:netrw_dirhist_2='/home/lomegor/dev/monetate/monetate-frontend/src/custom/sainsburys'
+let g:netrw_dirhist_3='/home/lomegor/dev/monetate/api'
+let g:netrw_dirhist_4='/home/lomegor/dev/monetate/monetate-frontend/src/custom/applevacations'
+let g:netrw_dirhist_5='/home/lomegor/dev/monetate/monetate-frontend/src/custom/qvc'
+let g:netrw_dirhist_6='/home/lomegor/dev/monetate/monetate-frontend/src/custom/waitrose'

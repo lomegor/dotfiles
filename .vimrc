@@ -30,7 +30,7 @@ set lazyredraw                  " don't update the display while executing macro
 set laststatus=2                " tell VIM to always put a status line in, even if there is only one window
 set cmdheight=2                 " use a status bar that is 2 rows high
 set hidden                      " hide buffers instead of closing them 
-set history=10                " remember more commands and search history
+set history=10                  " remember more commands and search history
 set undolevels=1000             " use many muchos levels of undo
 set nobackup                    " do not keep backup files, it's 70's style cluttering
 set noswapfile                  " do not write annoying intermediate swap files,
@@ -47,6 +47,14 @@ set ttyfast                     " always use a fast terminal
 set formatoptions-=o            " don't start new lines w/ comment leader on pressing 'o'
 set autoread                    " auto reload files
 set noeol												" no newline at end of file
+set autochdir
+
+" Status line options
+" set the status line to contain the parent folder
+set statusline=%<%{expand('%:p:h:t')}/%t
+set statusline+=\ %h%m%r%=
+set statusline+=\ %{FugitiveHead()}
+set statusline+=\ %l,%c%V\ (%P)
 
 " Add folding
 set foldmethod=syntax
@@ -64,10 +72,6 @@ let xml_syntax_folding=1      " XML
 " normal regexes
 nnoremap / /\v
 vnoremap / /\v
-" make p in Visual mode replace the selected text with the yank register
-vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
-" Shortcut to make
-map ,m :w<CR>:make<CR><CR>
 " Tabe equals tabe
 cab Tabe tabe
 " Remap j and k to act as expected when used on long, wrapped, lines
@@ -75,9 +79,6 @@ nnoremap j gj
 nnoremap <up> g<up>
 nnoremap k gk
 nnoremap <down> g<down>
-" Complete whole filenames/lines with a quicker shortcut key in insert mode
-imap <C-f> <C-x><C-f>
-imap <C-l> <C-x><C-l>
 " Use ,d (or ,dd or ,dj or 20,dd) to delete a line without adding it to the
 " yanked stack (also, in visual mode)
 nmap <silent> <leader>d "_d
@@ -103,6 +104,9 @@ map <C-h> :tabprevious<CR>
 map <C-l> :tabnext<CR>
 imap <C-h> <Esc>:tabprevious<CR>i
 imap <C-l> <Esc>:tabnext<CR>i
+" error navigation
+map ]l :lnext<CR>
+map [l :lprev<CR>
 
 " Restore cursor position upon reopening files {{{
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
@@ -128,6 +132,31 @@ colorscheme desert
 if &t_Co > 2 || has("gui_running")
    syntax on                    " switch syntax highlighting on, when the terminal has colors
 endif
+
+" plugin options
+" Add Pathogen
+execute pathogen#infect()
+map ; :Files<CR>
+map <C-o> :NERDTreeToggle<CR>
+set updatetime=100
+set signcolumn=yes
+let g:ale_set_loclist=1
+let g:ale_open_list='on_save'
+let g:ale_list_window_size_max=10
+autocmd User ALELintPost call s:ale_loclist_limit()
+function! s:ale_loclist_limit()
+    if exists("b:ale_list_window_size_max")
+        let b:ale_list_window_size = min([len(ale#engine#GetLoclist(bufnr('%'))), b:ale_list_window_size_max])
+    elseif exists("g:ale_list_window_size_max")
+        let b:ale_list_window_size = min([len(ale#engine#GetLoclist(bufnr('%'))), g:ale_list_window_size_max])
+    endif
+endfunction
+let g:ale_sign_error='❌'
+let g:ale_sign_warning='•'
+highlight ALEError ctermbg=none cterm=underline
+highlight ALEWarning ctermbg=none cterm=underline
+highlight ALEErrorSign ctermbg=NONE ctermfg=darkred
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 "set options for projects
 source ~/.mtvim

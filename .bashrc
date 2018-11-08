@@ -12,6 +12,7 @@ fi
 # User specific aliases and functions
 export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/go_appengine/:~/imp/prog/depot_tools:~/dev/monetate/monetate-frontend/frontend/bin:~/.rbenv/bin
 
+alias vi='gvim -v'
 alias vim='gvim -v'
 alias open='xdg-open'
 export SVN_EDITOR=vi
@@ -64,3 +65,5 @@ PROMPT_COMMAND=prompt_command
 if [ -f ~/.mt ]; then
 	. ~/.mt
 fi
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

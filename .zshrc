@@ -125,9 +125,10 @@ precmd () {
 
 #env
 export EDITOR=vim
-export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/go_appengine/:~/imp/prog/depot_tools:~/dev/monetate/monetate-frontend/frontend/bin:~/.rbenv/bin
+export PATH=$PATH:~/imp/prog/depot_tools:~/.rbenv/bin:/opt/Android/Sdk/tools:~/google-cloud-sdk/bin
 export SVN_EDITOR=vim
 
+alias vi='gvim -v -p'
 alias vim='gvim -v -p'
 alias open='xdg-open'
 alias install='sudo yum install'
@@ -141,3 +142,11 @@ grr() { grep -ri $1 . }
 if [ -f ~/.mt ]; then
 	. ~/.mt
 fi
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+eval "$(hub alias -s)"
+
+#use fd for fzf
+export FZF_DEFAULT_COMMAND='fd --type f'
+
