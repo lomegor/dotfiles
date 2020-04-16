@@ -105,8 +105,11 @@ map <C-l> :tabnext<CR>
 imap <C-h> <Esc>:tabprevious<CR>i
 imap <C-l> <Esc>:tabnext<CR>i
 " error navigation
-map ]l :lnext<CR>
-map [l :lprev<CR>
+map [[ :lfirst<CR>
+map [l :lnext<CR>
+map ]l :lprev<CR>
+" close preview
+map <C-\> :pclose<CR>
 
 " Restore cursor position upon reopening files {{{
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
@@ -127,6 +130,12 @@ au BufEnter *.h,*.c,*.cpp,*.py,*.js,*.java,*.pl,*.sh setlocal textwidth=79
 au BufEnter *.json set syntax=javascript textwidth=0 wrapmargin=0
 " GO files as go
 au BufEnter *.go set syntax=go textwidth=0 wrapmargin=0
+" csd files as Csound
+au BufEnter *.cs set syntax=csound textwidth=0 wrapmargin=0
+" .tsx as typescript
+au BufEnter *.tsx,*.jsx set syntax=typescript filetype=typescript.tsx
+
+set tags=tags;/
 
 colorscheme desert
 if &t_Co > 2 || has("gui_running")
@@ -136,8 +145,9 @@ endif
 " plugin options
 " Add Pathogen
 execute pathogen#infect()
-map ; :Files<CR>
-map <C-o> :NERDTreeToggle<CR>
+map <leader>l :Files<CR>
+let g:fzf_action = {'return': 'tabedit'}
+map <C-e> :NERDTreeToggle<CR>
 set updatetime=100
 set signcolumn=yes
 let g:ale_set_loclist=1
@@ -157,6 +167,8 @@ highlight ALEError ctermbg=none cterm=underline
 highlight ALEWarning ctermbg=none cterm=underline
 highlight ALEErrorSign ctermbg=NONE ctermfg=darkred
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+let g:lt_location_list_toggle_map = '<C-z>'
+map <C-d> :TernDefPreview<CR>
 
 "set options for projects
 source ~/.mtvim

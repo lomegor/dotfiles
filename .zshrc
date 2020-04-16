@@ -17,8 +17,8 @@ setopt COMPLETE_IN_WORD
 ## for sharing history between zsh processes
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=~/.history
 
 #color make everything prettier
@@ -138,6 +138,7 @@ alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 alias cleand='rm -r ~/tmp/downloads/*'
 alias untar='tar -xvzf'
 grr() { grep -ri $1 . }
+fr() { grep -ril $1 . | xargs sed -i "s/$1/$2/g" }
 
 if [ -f ~/.mt ]; then
 	. ~/.mt
@@ -145,8 +146,19 @@ fi
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
-eval "$(hub alias -s)"
+#NPM configuration
+NPM_PACKAGES="${HOME}/.npm-packages"
+export PATH="$NPM_PACKAGES/bin:$PATH"
+unset MANPATH # delete if you already modified MANPATH elsewhere in your config
+export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
+
 
 #use fd for fzf
 export FZF_DEFAULT_COMMAND='fd --type f'
+source /usr/share/fzf/shell/key-bindings.zsh
+bindkey '^X' fzf-file-widget
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH=$PATH:/home/lomegor/dev/monetate/monetate-frontend-tool/bin/mt; autoload bashcompinit && bashcompinit; source /home/lomegor/dev/monetate/monetate-frontend-tool/bin/mt/completion.bash
