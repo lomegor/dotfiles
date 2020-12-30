@@ -139,6 +139,7 @@ alias cleand='rm -r ~/tmp/downloads/*'
 alias untar='tar -xvzf'
 grr() { grep -ri $1 . }
 fr() { grep -ril $1 . | xargs sed -i "s/$1/$2/g" }
+vig() { vi $(grep -ril $1) }
 
 if [ -f ~/.mt ]; then
 	. ~/.mt
