@@ -137,14 +137,25 @@ au BufEnter *.tsx,*.jsx set syntax=typescript filetype=typescript.tsx
 
 set tags=tags;/
 
-colorscheme desert
+colorscheme simple-dark
 if &t_Co > 2 || has("gui_running")
    syntax on                    " switch syntax highlighting on, when the terminal has colors
 endif
 
 " plugin options
-" Add Pathogen
-execute pathogen#infect()
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+Plug 'darfink/vim-plist'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'dense-analysis/ale'
+Plug 'preservim/nerdtree'
+" Initialize plugin system
+call plug#end()
+
 map <leader>l :Files<CR>
 let g:fzf_action = {'return': 'tabedit'}
 map <C-e> :NERDTreeToggle<CR>
@@ -169,6 +180,3 @@ highlight ALEErrorSign ctermbg=NONE ctermfg=darkred
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 let g:lt_location_list_toggle_map = '<C-z>'
 map <C-d> :TernDefPreview<CR>
-
-"set options for projects
-source ~/.mtvim

@@ -24,6 +24,9 @@ HISTFILE=~/.history
 #color make everything prettier
 autoload -U colors
 colors
+export CLICOLOR=1
+export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+alias ll="ls -aG"
 
 #just a fun way to cd
 setopt AUTOCD
@@ -128,11 +131,7 @@ export EDITOR=vim
 export PATH=$PATH:~/imp/prog/depot_tools:~/.rbenv/bin:/opt/Android/Sdk/tools:~/google-cloud-sdk/bin
 export SVN_EDITOR=vim
 
-alias vi='gvim -v -p'
-alias vim='gvim -v -p'
-alias open='xdg-open'
-alias install='sudo yum install'
-alias update='sudo yum update -y'
+alias vi='vim -v -p'
 alias top='htop'
 alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 alias cleand='rm -r ~/tmp/downloads/*'
@@ -140,10 +139,6 @@ alias untar='tar -xvzf'
 grr() { grep -ri $1 . }
 fr() { grep -ril $1 . | xargs sed -i "s/$1/$2/g" }
 vig() { vi $(grep -ril $1) }
-
-if [ -f ~/.mt ]; then
-	. ~/.mt
-fi
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
@@ -156,10 +151,10 @@ export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 
 #use fd for fzf
 export FZF_DEFAULT_COMMAND='fd --type f'
-source /usr/share/fzf/shell/key-bindings.zsh
 bindkey '^X' fzf-file-widget
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH=$PATH:/home/lomegor/dev/monetate/monetate-frontend-tool/bin/mt; autoload bashcompinit && bashcompinit; source /home/lomegor/dev/monetate/monetate-frontend-tool/bin/mt/completion.bash
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
