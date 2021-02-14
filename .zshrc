@@ -26,6 +26,7 @@ autoload -U colors
 colors
 export CLICOLOR=1
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+alias ls='ls --color=auto'
 alias ll="ls -aG"
 
 #just a fun way to cd
@@ -136,7 +137,8 @@ alias top='htop'
 alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 alias cleand='rm -r ~/tmp/downloads/*'
 alias untar='tar -xvzf'
-grr() { grep -ri $1 . }
+alias grep='grep --color=auto'
+grr() { grep -ri --color=always --exclude-dir=node_modules --exclude-dir=.git $1 . }
 fr() { grep -ril $1 . | xargs sed -i "s/$1/$2/g" }
 vig() { vi $(grep -ril $1) }
 
@@ -150,7 +152,11 @@ export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 
 
 #use fd for fzf
-export FZF_DEFAULT_COMMAND='fd --type f'
+if type "fdfind" > /dev/null; then
+	export FZF_DEFAULT_COMMAND='fdfind --type f'
+else
+	export FZF_DEFAULT_COMMAND='fd --type f'
+fi
 bindkey '^X' fzf-file-widget
 
 export NVM_DIR="$HOME/.nvm"

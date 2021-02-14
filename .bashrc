@@ -12,13 +12,14 @@ fi
 # User specific aliases and functions
 export PATH=$PATH:~/imp/prog/google_appengine/:~/imp/prog/go_appengine/:~/imp/prog/depot_tools:~/dev/monetate/monetate-frontend/frontend/bin:~/.rbenv/bin
 
-alias vi='gvim -v'
-alias vim='gvim -v'
 alias open='xdg-open'
 export SVN_EDITOR=vi
 function cdl { cd $1; ls;}
 alias install='sudo yum install'
 alias update='sudo yum update -y'
+if type "fdfind" > /dev/null; then
+	alias fd='fdfind'
+fi
 
 #custmization function
 # Fill with minuses
@@ -71,6 +72,5 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH=$PATH:/home/lomegor/dev/monetate/monetate-frontend-tool/bin/mt; source /home/lomegor/dev/monetate/monetate-frontend-tool/bin/mt/completion.bash
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
