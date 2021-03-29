@@ -27,7 +27,7 @@ colors
 export CLICOLOR=1
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 alias ls='ls --color=auto'
-alias ll="ls -aG"
+alias ll="ls -lah"
 
 #just a fun way to cd
 setopt AUTOCD
@@ -132,7 +132,7 @@ export EDITOR=vim
 export PATH=$PATH:~/imp/prog/depot_tools:~/.rbenv/bin:/opt/Android/Sdk/tools:~/google-cloud-sdk/bin
 export SVN_EDITOR=vim
 
-alias vi='vim -v -p'
+alias vi='vim -v'
 alias top='htop'
 alias httpdlog='sudo tail -f /var/log/httpd/error_log'
 alias cleand='rm -r ~/tmp/downloads/*'
@@ -157,10 +157,25 @@ if type "fdfind" > /dev/null; then
 else
 	export FZF_DEFAULT_COMMAND='fd --type f'
 fi
-bindkey '^X' fzf-file-widget
+bindkey '^F' fzf-file-widget
+
+#fzf for git
+fbr() {
+  local branches branch
+  branches=$(git branch -a)
+  branch=$(echo "$branches" | fzf +s +m -e)
+  zle -U $(echo "$branch" | sed "s:.* remotes/origin/::" | sed "s:.* ::")
+}
+zle     -N   fbr
+bindkey '^Z' fbr
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# vcs jump for vim
+export PATH=$PATH:~/.vim/plugged/vcs-jump/bin
+alias vimerge="vim -c 'VcsJump merge'"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.fzf_local.zsh ] && source ~/.fzf_local.zsh

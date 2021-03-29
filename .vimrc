@@ -1,6 +1,5 @@
 set nocompatible
 
-" plugin options
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 Plug 'darfink/vim-plist'
@@ -14,8 +13,19 @@ Plug 'peitalin/vim-jsx-typescript'
 Plug 'leafgarland/typescript-vim'
 Plug 'jparise/vim-graphql'
 Plug 'nelsyeung/twig.vim'
+Plug 'tpope/vim-commentary'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'wincent/vcs-jump'
+Plug 'airblade/vim-rooter'
+Plug 'ap/vim-buftabline'
+Plug 'vim-vdebug/vdebug'
 " Initialize plugin system
 call plug#end()
+
+" Create persistent directiory if it doesn't exist
+if !isdirectory("/tmp/.vim-undo-dir")
+    call mkdir("/tmp/.vim-undo-dir", "", 0700)
+endif
 
 " Change the mapleader from \ to ,
 let mapleader=","
@@ -65,13 +75,22 @@ set formatoptions-=o            " don't start new lines w/ comment leader on pre
 set autoread                    " auto reload files
 set noeol					    " no newline at end of file
 set autochdir                   " chdir when changing files
+set undodir=/tmp/.vim-undo-dir  " set persistent dir to /tmp
+set undofile                    " set persistent undo on
+
+" Set tab title
 
 " Status line options
 " set the status line to contain the parent folder
-set statusline=%<%{expand('%:p:h:t')}/%t
+set statusline=%<%{expand('%:p:h')}/%t
 set statusline+=\ %h%m%r%=
 set statusline+=\ %{FugitiveHead()}
 set statusline+=\ %l,%c%V\ (%P)
+
+" gutter
+set updatetime=750
+set signcolumn=number
+highlight clear SignColumn
 
 " Add folding
 set foldmethod=syntax
@@ -89,8 +108,6 @@ let xml_syntax_folding=1      " XML
 " normal regexes
 nnoremap / /\v
 vnoremap / /\v
-" Tabe equals tabe
-cab Tabe tabe
 " Remap j and k to act as expected when used on long, wrapped, lines
 nnoremap j gj
 nnoremap <up> g<up>
@@ -100,31 +117,42 @@ nnoremap <down> g<down>
 " yanked stack (also, in visual mode)
 nmap <silent> <leader>d "_d
 vmap <silent> <leader>d "_d
-" Quick yanking to the end of the line
-nmap Y y$
 " Yank/paste to the OS clipboard with ,y and ,p
 map <leader>y "+y
 map <leader>Y "+yy
 map <leader>p "+p
 map <leader>P "+P
 " Clears highlight
-nmap <silent> <leader>/ :nohlsearch<CR>
+nmap <silent> <leader>? :nohlsearch<CR>
 " Sudo to write
 cmap w!! w !sudo tee % >/dev/null
 " Enter to create new line
 map <S-Enter> O<Esc>
 map <CR> o<Esc>
-" tab navigation
-nmap <C-h> :tabprevious<CR>
-nmap <C-l> :tabnext<CR>
-map <C-h> :tabprevious<CR>
-map <C-l> :tabnext<CR>
-imap <C-h> <Esc>:tabprevious<CR>i
-imap <C-l> <Esc>:tabnext<CR>i
+" buffer navigation
+nmap <C-h> :bprev<CR>
+nmap <C-l> :bnext<CR>
+map <C-h> :bprev<CR>
+map <C-l> :bnext<CR>
+imap <C-h> <Esc>:bprev<CR>i
+imap <C-l> <Esc>:bnext<CR>i
+nnoremap <leader>1 :b 1<CR>
+nnoremap <leader>2 :b 2<CR>
+nnoremap <leader>3 :b 3<CR>
+nnoremap <leader>4 :b 4<CR>
+nnoremap <leader>5 :b 5<CR>
+nnoremap <leader>6 :b 6<CR>
+nnoremap <leader>7 :b 7<CR>
+nnoremap <leader>8 :b 8<CR>
+nnoremap <leader>9 :b 9<CR>
+" open buffer with current dir
+map <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+" close buffer
+map <C-d> :bd<CR>
 " error navigation
 map [[ :lfirst<CR>
 map [l :lnext<CR>
-map ]l :lprev<CR>
+map [h :lprev<CR>
 " close preview
 map <C-\> :pclose<CR>
 
@@ -166,31 +194,36 @@ if &t_Co > 2 || has("gui_running")
    syntax on                    " switch syntax highlighting on, when the terminal has colors
 endif
 
-map <leader>l :Files .<CR>
-let g:fzf_action = {'return': 'tabedit'}
+" plugin config
+" fzf
+map <leader>; :Files .<CR>
+" Tabe equals in current dir
+map <leader>. :Files <C-R>=expand("%:p:h") . "/" <CR><CR>
+" ripgrep
+map <leader>/ :Rg 
+map <expr> <leader>* ':Rg '.expand('<cword>').'<CR>'
+
+" nerdtree
 map <C-e> :NERDTreeToggle<CR>
-set updatetime=100
-set signcolumn=number
-highlight clear SignColumn
-let g:ale_set_loclist=1
-let g:ale_lint_on_insert_leave=1
-let g:ale_open_list='on_save'
-let g:ale_list_window_size_max=10
-autocmd User ALELintPost call s:ale_loclist_limit()
+
+" ale  options
+let g:ale_set_loclist=1                                 " use loclist
+let g:ale_lint_on_insert_leave=1                        " lint on esc
+let g:ale_open_list='on_save'                           " open loclist on save
+let g:ale_list_window_size_max=10                       " max size of loclist
+let g:ale_sign_error='❌'                               " error sign
+let g:ale_sign_warning='•'                              " warning sign
+autocmd User ALELintPost call s:ale_loclist_limit()     " automatically adjust loclist size
 function! s:ale_loclist_limit()
-    if exists("b:ale_list_window_size_max")
-        let b:ale_list_window_size = min([len(ale#engine#GetLoclist(bufnr('%'))), b:ale_list_window_size_max])
-    elseif exists("g:ale_list_window_size_max")
-        let b:ale_list_window_size = min([len(ale#engine#GetLoclist(bufnr('%'))), g:ale_list_window_size_max])
-    endif
+    let b:ale_list_window_size = min([len(ale#engine#GetLoclist(bufnr('%'))), g:ale_list_window_size_max])
 endfunction
-let g:ale_sign_error='❌'
-let g:ale_sign_warning='•'
+" ale colors
 highlight ALEError ctermbg=none cterm=underline
 highlight ALEWarning ctermbg=none cterm=underline
 highlight ALEErrorSign ctermbg=NONE ctermfg=darkred
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
-let g:lt_location_list_toggle_map = '<C-z>'
+let g:lt_location_list_toggle_map = '<C-z>'             " toggle loclist
+" ale fixers
 let g:ale_linters = {
  \ 'javascript': ['eslint'],
  \ 'typescript': ['eslint', 'tsserver'],
@@ -205,8 +238,19 @@ let g:ale_fixers = {
  \ 'less': ['prettier'],
  \ }
 let g:ale_fix_on_save = 1
+
+" gutentag only git files
+let g:gutentags_file_list_command = 'rg --files'
+
+" rooter
+let g:rooter_patterns = ['=src', '.git']
+
+" tabline
+let g:buftabline_indicators = 1
+let g:buftabline_numbers=1
+
+" load local config it exists
 try 
       source ~/.vimrc_local
 catch
 endtry 
-map <C-d> :TernDefPreview<CR>
