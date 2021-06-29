@@ -120,6 +120,12 @@ vmap <silent> <leader>d "_d
 " Yank/paste to the OS clipboard with ,y and ,p
 map <leader>y "+y
 map <leader>Y "+yy
+vmap <leader>y "+y
+vmap <leader>Y "+yy
+map <leader>d "+d
+map <leader>D "+dd
+vmap <leader>d "+d
+vmap <leader>D "+dd
 map <leader>p "+p
 map <leader>P "+P
 " Clears highlight

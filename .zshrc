@@ -179,3 +179,4 @@ alias vimerge="vim -c 'VcsJump merge'"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.fzf_local.zsh ] && source ~/.fzf_local.zsh
+[ -f ~/.zshrc_local ] && source ~/.zshrc_local

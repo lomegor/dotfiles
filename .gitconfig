@@ -3,7 +3,7 @@
 	email = lomegor@gmail.com
 [core]
 	editor = vim
-	excludesfile = /home/lomegor/.gitignore_global
+	excludesfile = ~/.gitignore
 [color]
 	ui = auto
 [alias]
