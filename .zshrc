@@ -67,16 +67,27 @@ local return_code='%(0?..%F{red}(%?%)%f)'
 local time_str="$fg_bold[grey]%}%w %*%{%f%}"
 local timsize=${#${(%):-%w %*%}}
 
-#precmd used for setting prompt because I could not find a way
-#to use data on here on another function
+local ASYNC_PROC=0
 precmd () {
-	#git info
-	if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
-			zstyle ':vcs_info:*' formats '%F{blue}[%F{green}%b%c%u%F{blue}]%f'
-	} else {
-			zstyle ':vcs_info:*' formats '%F{blue}[%F{green}%b%c%u%F{red}●%F{blue}]%f'
-	}
-	vcs_info
+    # do git asynchronously for faster response
+    async () {
+        #git info
+        if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
+                printf "%s" "%F{blue}[%F{green}%b%c%u%F{blue}]%f" > "/tmp/vcs_info_$$"
+        } else {
+                printf "%s" "%F{blue}[%F{green}%b%c%u%F{red}●%F{blue}]%f" > "/tmp/vcs_info_$$"
+        }
+        # signal parent
+        kill -s USR1 $$
+    }
+
+    # kill child if necessary
+    if [[ "${ASYNC_PROC}" != 0 ]]; then
+        kill -s HUP $ASYNC_PROC >/dev/null 2>&1 || :
+    fi
+    # start background computation
+    async &!
+    ASYNC_PROC=$!
 
 	#if dirsize too long, truncate
 	local dirsize=${#${(%):-%~}}
@@ -88,43 +99,22 @@ precmd () {
 	#first round of spaces to center date
 	local PR_FILL1="\${(l.(($COLUMNS/2 - 3 - $dirsize - $timsize/2)).. .)}"
 
-	local PR_BATTERY=""
-	#battery
-	if [[ -d /sys/class/power_supply/BAT1 ]] {
-		local rem=$(cat /sys/class/power_supply/BAT1/charge_now)
-		local full=$(cat /sys/class/power_supply/BAT1/charge_full)
-		local state=$(cat /sys/class/power_supply/BAT1/status)
-
-		#calculate percentage and color of battery
-		local percentage
-			(( percentage = ($rem*10/$full)))
-		PR_BATTERY="${(l.$percentage)..█.)}"
-		local PR_BATTERY_COLOR="$fg_bold[grey]"
-		if [[ percentage -lt 2 ]]; then
-			PR_BATTERY_COLOR="%F{red}"
-		elif [[ percentage -lt 4 ]]; then 
-			PR_BATTERY_COLOR="%F{yellow}"
-		fi
-		local percsize=$percentage
-
-		#add symbol if chargin
-		local charging=""
-		if [[ $state != "Discharging" ]]; then
-			charging="↯"
-			((percsize=percsize+1))
-		fi
-		#second space round for getting everything to the end of the line
-		local PR_FILL2="\${(l.(( ($COLUMNS - 1)/2 - $percsize - $timsize/2)).. .)}"
-		PR_BATTERY="${charging}${PR_BATTERY}"
-	}
-
 	#ser virtualenv
 	local PR_VIRTUAL="`basename \"$VIRTUAL_ENV\"`"
 
 	#setting prompt here because PR_FILL does not get passed
-	PROMPT="╭─ %{%F{blue}%}${current_dir}%{%f%}${(e)PR_FILL1}${time_str}${(e)PR_FILL2}${PR_BATTERY_COLOR}${PR_BATTERY}%{%f%}
+	PROMPT="╭─ %{%F{blue}%}${current_dir}%{%f%}${(e)PR_FILL1}${time_str}${(e)PR_FILL2}%{%f%}
 ╰─${PR_VIRTUAL} %B%#%b%{%f%} "
 	RPROMPT="${return_code} ${git_branch}"
+}
+
+TRAPUSR1 () {
+    local vcs_info_style="$(cat /tmp/vcs_info_$$)"
+    zstyle ':vcs_info:*' formats $vcs_info_style
+    vcs_info
+	RPROMPT="${return_code} ${git_branch}"
+    ASYNC_PROC=0
+    zle && zle reset-prompt
 }
 
 #env
@@ -139,7 +129,7 @@ alias cleand='rm -r ~/tmp/downloads/*'
 alias untar='tar -xvzf'
 alias grep='grep --color=auto'
 grr() { grep -ri --color=always --exclude-dir=node_modules --exclude-dir=.git $1 . }
-fr() { grep -ril $1 . | xargs sed -i "s/$1/$2/g" }
+fr() { rg -l $1 | xargs sed -i "" "s/$1/$2/g" }
 vig() { vi $(grep -ril $1) }
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
@@ -180,3 +170,13 @@ alias vimerge="vim -c 'VcsJump merge'"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.fzf_local.zsh ] && source ~/.fzf_local.zsh
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
+
+# Created by `pipx` on 2023-06-26 12:01:55
+export PATH="$PATH:/Users/seb.ventura/.local/bin"
+
+# bun completions
+[ -s "/Users/seb.ventura/.bun/_bun" ] && source "/Users/seb.ventura/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

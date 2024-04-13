@@ -14,7 +14,6 @@ Plug 'leafgarland/typescript-vim'
 Plug 'jparise/vim-graphql'
 Plug 'nelsyeung/twig.vim'
 Plug 'tpope/vim-commentary'
-Plug 'ludovicchabant/vim-gutentags'
 Plug 'wincent/vcs-jump'
 Plug 'airblade/vim-rooter'
 Plug 'ap/vim-buftabline'
@@ -26,6 +25,17 @@ call plug#end()
 if !isdirectory("/tmp/.vim-undo-dir")
     call mkdir("/tmp/.vim-undo-dir", "", 0700)
 endif
+
+if &t_Co > 2 || has("gui_running")
+    set t_Co=256                 " force 256
+    syntax on                    " switch syntax highlighting on, when the terminal has colors
+endif
+colorscheme desert
+highlight Normal ctermfg=15 ctermbg=236
+highlight Constant guifg=#a7cb8b ctermfg=113
+highlight Type ctermfg=9
+highlight Search ctermbg=LightYellow ctermfg=Red
+highlight QuickFixLine ctermbg=none
 
 " Change the mapleader from \ to ,
 let mapleader=","
@@ -91,6 +101,7 @@ set statusline+=\ %l,%c%V\ (%P)
 set updatetime=750
 set signcolumn=number
 highlight clear SignColumn
+highlight! link SignColumn LineNr
 
 " Add folding
 set foldmethod=syntax
@@ -98,7 +109,7 @@ set foldlevelstart=20
 
 let javaScript_fold=1         " JavaScript
 let perl_fold=1               " Perl
-let php_folding=1             " PHP
+let php_folding=0             " PHP
 let r_syntax_folding=1        " R
 let ruby_fold=1               " Ruby
 let sh_fold_enabled=1         " sh
@@ -156,9 +167,9 @@ map <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 " close buffer
 map <C-d> :bd<CR>
 " error navigation
-map [[ :lfirst<CR>
-map [l :lnext<CR>
-map [h :lprev<CR>
+map [p :ALEFirst<CR>
+map [[ :ALENext<CR>
+map [] :ALEPrev<CR>
 " close preview
 map <C-\> :pclose<CR>
 
@@ -195,11 +206,6 @@ au QuitPre * if empty(&buftype) | lclose | endif
 
 set tags=tags;/
 
-colorscheme simple-dark
-if &t_Co > 2 || has("gui_running")
-   syntax on                    " switch syntax highlighting on, when the terminal has colors
-endif
-
 " plugin config
 " fzf
 map <leader>; :Files .<CR>
@@ -229,24 +235,27 @@ highlight ALEWarning ctermbg=none cterm=underline
 highlight ALEErrorSign ctermbg=NONE ctermfg=darkred
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 let g:lt_location_list_toggle_map = '<C-z>'             " toggle loclist
-" ale fixers
+let g:ale_linter_aliases = {
+ \ 'typescript': ['javascript', 'css', 'typescript'],
+ \ 'typescriptreact': ['javascript', 'css', 'typescript'],
+ \  }
 let g:ale_linters = {
  \ 'javascript': ['eslint'],
- \ 'typescript': ['eslint', 'tsserver'],
- \ 'typescriptreact': ['eslint', 'tsserver'],
+ \ 'typescript': ['eslint', 'tsserver', 'stylelint'],
+ \ 'typescriptreact': ['eslint', 'tsserver', 'stylelint'],
  \ 'graphql': [],
+ \ 'json': [],
+ \ 'php': ['phpcs', 'psalm'],
  \ }
 let g:ale_fixers = {
  \ 'javascript': ['prettier'],
- \ 'typescript': ['prettier'],
+ \ 'typescript': ['prettier', 'stylelint'],
  \ 'typescriptreact': ['prettier'],
  \ 'graphql': ['prettier'],
  \ 'less': ['prettier'],
+ \ 'php': ['phpcbf'],
  \ }
 let g:ale_fix_on_save = 1
-
-" gutentag only git files
-let g:gutentags_file_list_command = 'rg --files'
 
 " rooter
 let g:rooter_patterns = ['=src', '.git']
