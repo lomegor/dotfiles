@@ -23,7 +23,7 @@
 	panic = !tar cvf ../git_panic.tar .
 	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 	fix = commit --amend -C HEAD
-	dmerged = !"git branch --merged | egrep -v \"(^\\*|master|develop)\" | xargs git branch -d"
+	dmerged = !"git branch --merged | egrep -v \"(^\\*|main|master|develop)\" | xargs git branch -d"
 	prb = pull --rebase
 	radd = !"f() { git remote add ${1} git@github.com:${1}/monetate-frontend.git; }; f"
 	prpo = !"git pull --rebase upstream master && git push origin master"
@@ -35,3 +35,5 @@
 	default = current
 [commit]
 	gpgsign = true
+[init]
+	defaultBranch = main
