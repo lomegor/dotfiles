@@ -1,7 +1,3 @@
-[user]
-	name = Sebastián Ventura
-	email = seb.ventura@mention-me.com
-	signingkey = 9F8F782C49995E8C
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore
